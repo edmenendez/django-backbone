@@ -130,6 +130,12 @@ class BackboneAPIView(View):
         """
         Handles put requests.
         """
+        if not id:
+            payload = json.loads(request.body if hasattr(request, 'body') else request.raw_post_data)
+            try:
+                id = payload['id']
+            except KeyError:
+                pass
         if id:
             obj = get_object_or_404(self.queryset(request), id=id)
             if not self.has_update_permission(request, obj):
